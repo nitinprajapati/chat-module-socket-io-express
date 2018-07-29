@@ -1,0 +1,79 @@
+<h2 class="page-header">Account Login</h2>
+<div class="alert alert-danger hidden" id="error">
+  <strong id="errMsg"></strong>
+</div>
+<form>
+  <div class="form-group">
+    <label>Username/Email</label>
+    <input type="text" class="form-control" data-key="Username" placeholder="Username/Email" required="required" />
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input type="password" class="form-control" data-key="Password" placeholder="Password" required="required" />
+  </div>
+  <button type="button" id="signin" class="btn btn-default">Sign In</button>
+</form>
+<script>
+  $( () => {
+    
+    $('#signin').on('click', () => {
+        signIn();
+    });
+
+    var signIn = () => {
+        var formObject = formValues();
+        if(formObject !== false){
+            sendRemoteCall(formObject);
+        }
+    };
+
+    var formValues = () => {
+        var nodes = $("[data-key]"), obj = {}, valid=true;
+        nodes.each((node, val) => {
+          key = $(val).attr('data-key');
+          if($(val).val() == ""){
+            $('#errMsg').text(key+" can not be empty");
+            $("#error").removeClass( "hidden");
+            valid = false;
+            return valid;
+          }
+          else {
+            obj[key] = $(val).val();
+          }
+        });
+        
+        if(valid){
+           $("#error").addClass("hidden");
+        }
+        else {
+          obj = valid;
+        }
+        return obj;
+    };
+
+    var sendRemoteCall = (object) => {
+      $.ajax({
+        url: "/signin",
+        type: "POST",
+        async: false,
+        data: JSON.stringify(object),
+        dataType: "json",
+        contentType: "application/json",
+        statusCode: {
+            404: () => {
+                alert("page not found");
+            }
+        },
+        success: (msg) => {
+          if(msg.Status === true){
+            location.href = "/";
+          }
+          else{
+            $('#errMsg').text(msg.Message);
+            $("#error").removeClass( "hidden");
+          }
+        }
+      });
+    };
+});
+</script>

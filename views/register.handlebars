@@ -1,0 +1,100 @@
+<h2 class="page-header">Register</h2>
+<form method="POST" action="/signup" style="max-height: 405px; overflow-y:auto;">
+<div class="alert alert-danger hidden" id="error">
+  <strong id="errMsg"></strong>
+</div>
+<div class="alert alert-success hidden" id="success">
+  <strong>You are registered successfully!</strong> Please <a href="/login" class="alert-link">Login</a> to continue.
+</div>
+   <div class="form-group">
+    <label>Full Name</label>
+    <input type="text" class="form-control toEmpty" data-key="Name" placeholder="Full Name" id="name" required="required" />
+  </div>
+  <div class="form-group">
+    <label>Username</label>
+    <input type="text" class="form-control toEmpty" data-key="Username" placeholder="Username" id="username" required="required" />
+  </div>
+   <div class="form-group">
+    <label>Email</label>
+    <input type="email" class="form-control toEmpty" data-key="Email" placeholder="Email" id="email" required="required" >
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input type="password" class="form-control toEmpty" data-key="Password" placeholder="Password" id="password" required="required" >
+  </div>
+  <div class="form-group">
+    <label>Confirm Password</label>
+    <input type="password" class="form-control toEmpty" data-key="CPassword" placeholder="Confirm Password" id="password2" required="required" >
+  </div>
+  <button type="button" class="btn btn-default" id="signup">Submit</button>
+</form>
+<script>
+  $( () => {
+    $('#signup').on('click', () => {
+        signUp();
+    });
+
+    var signUp = () => {
+        var formObject = formValues();
+        if(formObject !== false){
+            sendRemoteCall(formObject);
+        }
+
+    };
+
+    var formValues = () => {
+      var nodes = $("[data-key]"), obj = {}, valid=true;
+        nodes.each((node, val) => {
+          key = $(val).attr('data-key');
+          if($(val).val() == ""){
+            $('#errMsg').text(key+" can not be empty");
+            $("#error").removeClass( "hidden");
+            valid = false;
+            return valid;
+          }
+          else {
+            obj[key] = $(val).val();
+          }
+        });
+        
+        if(valid){
+          $("#error").addClass("hidden");
+           if(obj.Password !== obj.CPassword){
+            $('#errMsg').text("Password does not matched");
+            $("#error").removeClass( "hidden");
+            obj = false;
+          }
+        }
+        else {
+          obj = valid;
+        }
+        return obj;
+    };
+
+    var sendRemoteCall = (object) => {
+      $.ajax({
+        url: "/signup",
+        type: "POST",
+        async: false,
+        data: JSON.stringify(object),
+        dataType: "json",
+        contentType: "application/json",
+        statusCode: {
+            404: function() {
+                alert("page not found");
+            }
+        },
+        success: function(msg){
+          if(msg.Status === true){
+            $("#success").removeClass( "hidden");
+            $('.toEmpty').val('');
+          }
+          else{
+            $('#errMsg').text(msg.Message);
+            $("#error").removeClass( "hidden");
+          }
+        }
+      });
+    };
+});
+</script>

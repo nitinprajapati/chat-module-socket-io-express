@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ChatApp</title>
+	<link rel="stylesheet" href="/css/bootstrap.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+	<div class="fluid">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            {{#if user}}
+              <li role="presentation"><a href="/">Dashboard</a></li>
+              <li role="presentation"><a href="/logout">Logout</a></li>
+            {{else}}
+              <li role="presentation"><a href="/login">Login</a></li>
+              <li role="presentation"><a href="/register">Register</a></li>
+            {{/if}}
+          </ul>
+        </nav>
+        <h3 class="text-muted">ChatApp</h3>
+      </div>
+
+      <div class="container">
+        <div class="col-lg-12 content">
+          <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+          {{{body}}}
+        </div>
+      </div>
+      <footer class="footer">
+        <p class="pull-right">&copy; 2018 ChatApp, Inc.</p>
+      </footer>
+    </div> <!-- /container -->
+    <script>
+      $(() => {
+        $('.content').css("height", window.innerHeight-221+"px");
+      })
+    </script>
+  </body>
+</html>
