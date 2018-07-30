@@ -9,16 +9,39 @@ var debug = require('debug')('chatapp:server');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 // var socket;
-io.on('connection', (socket) => {
-  console.log("user connected");
-   socket.on('setUsername', (data) => {
-      socket.emit('loginusers', {username: data});
-   });
-   
-   socket.on('msg', (data) => {
-      io.sockets.emit('newmsg', data);
-   });
+var users = {};
+io.sockets.on('connection', (socket) => {
+  socket.on('new user', (data, callback) => {
+    if(data in users){
+      callback(false);
+    }
+    else{
+        callback(true);
+        socket.nickname = data;
+        users[socket.nickname] = socket;
+        updateNickname();
+    }
+  });
+
+  updateNickname = () => {
+    io.sockets.emit("username", Object.keys(users));
+  }
+
+  socket.on('send message', (data) => {
+    io.sockets.emit("new message", {msg: data, nickname: socket.nickname});
+  });
+
+  socket.on('disconnect', (data) => {
+    if(!socket.nickname) return;
+    delete users[socket.nickname];
+    updateNickname();
+    
+  });
+
+  
 });
+
+
 
 
 

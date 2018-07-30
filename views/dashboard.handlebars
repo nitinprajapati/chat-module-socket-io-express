@@ -1,27 +1,51 @@
-<div class="row">
+<div class="row" style="margin-top: 10px;">
     <div class="col-md-0"></div>
-    <div class="col-md-12 pull-right">Welcome, {{user.Username}}</div>
+    <div class="col-md-12 pull-right" id="loggedinUser">Welcome, {{user.Username}}</div>
 </div>
 <div class="" id="onlineUsers">
 </div>
+<div class="chat-window-area">
+
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
 <script>
-     var socket = io();
-     socket.on("loginusers", (data) => {
-         console.log("User loggedin: "+JSON.stringify(data));
-     });
-     function setUsername(){
-         socket.emit("setUsername", $('#name').val());
-     }
-   </script>
-   <div id = "error-container"></div>
-      <input id = "name" type = "text" name = "name" value = "" 
-         placeholder = "Enter your name!">
-      <button type = "button" name = "button" onclick = "setUsername()">
-         Let me chat!
-      </button>
-<script>
+    function sendMessage (chatid, username){
+        socket.emit('send message', {Message: $('#'+chatid+'_chat').val(), User: username, ChatId: chatid});
+    }
+
+    var socket = io.connect();
+    socket.on('connect',function(data){
+		socket.emit('ConnectToUser',{Id:new Date().getTime()});
+	});
+
+    socket.on('new message',function(msg){
+        $("#"+msg.msg.ChatId).append("<br />"+msg.msg.Message);
+    });
+
+    socket.on('username',function(msg){
+
+       for(let i=0; i<msg.Result.length; i++){
+            randomId = new Date().getTime();
+            str += '<div><div class="col-md-2 pull-right user-list" data-chatid="'+randomId+'" data-username="'+msg.Result[i].Username+'">'+msg.Result[i].Username+'</div></div>';
+        }
+        $("#onlineUsers").html(str);
+    });
+
   $( () => {
+    $('body').on('click', '.user-list', (event) => {
+        var chatid = $(event.currentTarget).attr('data-chatid');
+        var username = $(event.currentTarget).attr('data-username');
+        socket.emit('new user', username, (data) => {
+            if(data){
+                console.log("User connected");
+            }
+        });
+
+        var chatWindowHtml = '<div class="chat"><div id="'+chatid+'" class="chat-msgs"></div><div class="chat-controls"><input type="text" id="'+chatid+'_chat" placeholder="Type here" /><button type="button" class="btn btn-default" onclick="sendMessage(\''+chatid+'\', \''+username+'\');">Send </button><div></div>';
+        $('.chat-window-area').html(chatWindowHtml);
+
+    });
+
     var onlineUsers = () => {
       $.ajax({
         url: "/loggedinUsers",
@@ -37,9 +61,10 @@
         },
         success: (msg) => {
             if(msg.Status){
-                var str = "";
+                var str = "", randomId="";
                 for(let i=0; i<msg.Result.length; i++){
-                    str += '<div class="row"><div class="col-md-2 pull-right">'+msg.Result[i].Username+'</div></div>';
+                    randomId = new Date().getTime();
+                    str += '<div><div class="col-md-2 pull-right user-list" data-chatid="'+randomId+'" data-username="'+msg.Result[i].Username+'">'+msg.Result[i].Username+'</div></div>';
                 }
                 $("#onlineUsers").html(str);
             }

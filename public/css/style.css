@@ -85,3 +85,36 @@ body {
 footer{
   margin-top:40px;
 }
+
+.user-list{
+  background: #eee;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.chat-window-area {
+  position: fixed;
+  bottom: 41px;
+}
+
+.chat-section {
+  width: 100%;
+  max-height: 250px;
+  border: 1px solid #aaa;
+  padding: 10px;
+  min-height: 100px;
+}
+
+.chat {
+  width: 100%;
+  max-height: 250px;
+  border: 1px solid #aaa;
+  padding: 10px;
+  min-height: 100px;
+}
+
+.chat-msgs{
+  height: 100px;
+  max-height: 100px;
+  overflow-y: auto;
+}
