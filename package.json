@@ -1,6 +1,6 @@
 {
   "name": "chatapp",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -17,5 +17,26 @@
     "mongodb": "^2.2.33",
     "morgan": "~1.9.0",
     "socket.io": "^2.1.1"
-  }
+  },
+  "description": "Chat application using express, mongo, node and socket io",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nitinprajapati/chat-module-socket-io-express.git"
+  },
+  "keywords": [
+    "chat",
+    "using",
+    "socket",
+    "io",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "Nitin Kumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nitinprajapati/chat-module-socket-io-express/issues"
+  },
+  "homepage": "https://github.com/nitinprajapati/chat-module-socket-io-express#readme"
 }

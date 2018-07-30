@@ -35,16 +35,16 @@ io.sockets.on('connection', (socket) => {
     if(!socket.nickname) return;
     delete users[socket.nickname];
     updateNickname();
-    
   });
 
+  socket.on('CustomClose', (data) => {
+    if(!socket.nickname) return;
+    delete users[socket.nickname];
+    updateNickname();
+    io.sockets.emit("disconnected", {msg: true});
+  });
   
 });
-
-
-
-
-
 
 /**
  * Get port from environment and store in Express.

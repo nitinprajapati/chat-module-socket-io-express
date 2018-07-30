@@ -12,7 +12,7 @@
           <ul class="nav nav-pills pull-right">
             {{#if user}}
               <li role="presentation"><a href="/">Dashboard</a></li>
-              <li role="presentation"><a href="/logout">Logout</a></li>
+              <li role="presentation"><a href="#" onclick="logout()">Logout</a></li>
             {{else}}
               <li role="presentation"><a href="/login">Login</a></li>
               <li role="presentation"><a href="/register">Register</a></li>
@@ -36,7 +36,7 @@
     <script>
       $(() => {
         $('.content').css("height", window.innerHeight-221+"px");
-      })
+      });
     </script>
   </body>
 </html>
